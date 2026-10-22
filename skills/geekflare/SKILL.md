@@ -49,7 +49,7 @@ Reference the environment variable instead of writing the key into config wherev
 **Gemini CLI.** Install this repository as an extension. It registers the server and prompts for the key, storing it in the system keychain:
 
 ```bash
-gemini extensions install https://github.com/geekflare/geekflare-clawhub-skill
+gemini extensions install https://github.com/geekflare/geekflare-skills
 ```
 
 **Claude Code.** `.mcp.json` expands `${VAR}`:
