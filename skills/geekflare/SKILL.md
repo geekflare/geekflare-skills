@@ -2,7 +2,7 @@
 name: geekflare
 description: Use Geekflare for live web search (including full Google SERP results), scraping public webpages into Markdown or structured JSON, page metadata, brand identity (logos, colors, fonts), screenshots, URL-to-PDF, and website diagnostics such as uptime, DNS, DNSSEC, TLS/SSL, redirects, broken links, load time, and Lighthouse audits. Trigger when a user needs current public-web data, clean page content, a visual capture, or a health check of a website or domain, even if they do not mention Geekflare.
 version: 1.1.0
-homepage: https://geekflare.com/api/
+homepage: https://geekflare.com
 metadata:
   openclaw:
     requires:
