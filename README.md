@@ -1,43 +1,51 @@
-# Geekflare skill for ClawHub
+# Geekflare agent skill
 
-Official Geekflare skill for [OpenClaw](https://docs.openclaw.ai), published on [ClawHub](https://clawhub.ai). The skill lives in [`geekflare/`](geekflare/):
+Official [Geekflare](https://geekflare.com/api/) skill for AI agents. It covers web search (including Google SERP), page scraping, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, DNSSEC, TLS, redirects, broken links, load time, Lighthouse).
 
-- [`geekflare/SKILL.md`](geekflare/SKILL.md): when to use each Geekflare tool, setup (hosted MCP server + `GEEKFLARE_API_KEY`), working rules, errors, REST fallback.
-- [`geekflare/references/tools.md`](geekflare/references/tools.md): per-tool parameter reference.
+[![skills.sh](https://skills.sh/b/geekflare/geekflare-clawhub-skill)](https://skills.sh/geekflare/geekflare-clawhub-skill)
 
-Everything in `geekflare/` is published; this README and anything outside that folder is not. Published skills are licensed MIT-0 by ClawHub.
+You need a Geekflare API key: <https://dash.geekflare.com>. Store it as the `GEEKFLARE_API_KEY` environment variable.
 
-## Publish
+## Install
 
-Install the CLI (if `npm i -g` fails with EACCES, use `npx clawhub` instead):
-
-```bash
-npm i -g clawhub
-```
-
-Log in with the account that can publish for the Geekflare org on ClawHub:
+**Claude Code, Cursor, Codex, Copilot, Windsurf, and other agents** (via [skills.sh](https://skills.sh)):
 
 ```bash
-clawhub login
+npx skills add geekflare/geekflare-clawhub-skill
 ```
 
-Preview first:
+Then connect the Geekflare MCP server in your agent. [`SKILL.md`](skills/geekflare/SKILL.md#setup) has config snippets that read the key from `GEEKFLARE_API_KEY`. Without MCP, the skill falls back to the REST API.
+
+**Gemini CLI** (installs the skill and the MCP server, and prompts for the key):
 
 ```bash
-clawhub skill publish ./geekflare --owner geekflare --slug geekflare --name "Geekflare" --version 1.0.0 --categories research,integrations --dry-run
+gemini extensions install https://github.com/geekflare/geekflare-clawhub-skill
 ```
 
-Then publish by running the same command without `--dry-run`. Bump `version` in `geekflare/SKILL.md` and `--version` for each later release, and add `--changelog "..."`.
+**OpenClaw** (via [ClawHub](https://clawhub.ai/geekflare/skills/geekflare)):
 
-Notes:
+```bash
+openclaw skills install @geekflare/geekflare
+```
 
-- `--owner geekflare` assumes the ClawHub org handle is `geekflare`. Create the org (or claim the namespace: <https://docs.openclaw.ai/clawhub/namespace-claims>) before the first publish so the listing shows as official.
-- The slug `geekflare` was unclaimed on ClawHub as of 2026-10-21.
-- Categories mirror Apify's listing (`research`, `integrations`); adjust if the ClawHub UI offers a better fit.
-- Optional: publish from a public GitHub repo and pass `--source-repo`, `--source-commit`, `--source-path geekflare` so the listing links to its source.
+## Layout
 
-## Test locally before publishing
+- [`skills/geekflare/SKILL.md`](skills/geekflare/SKILL.md): when to use each tool, setup per client, working rules, errors, and the REST API.
+- [`skills/geekflare/references/tools.md`](skills/geekflare/references/tools.md): per-tool parameter reference.
+- [`gemini-extension.json`](gemini-extension.json): Gemini CLI extension manifest. It registers the remote MCP server and the `GEEKFLARE_API_KEY` setting, and Gemini loads the skill from `skills/`.
 
-1. Set `GEEKFLARE_API_KEY` in `~/.openclaw/.env`.
-2. Add the MCP server as described in `SKILL.md` and run `openclaw mcp probe geekflare`.
-3. Copy `geekflare/` into your OpenClaw skills directory and try prompts such as "check the TLS certificate of example.com" or "show the Google results for 'best crm' in the UK".
+## Maintainers: releasing
+
+Keep `version` in `skills/geekflare/SKILL.md` and `gemini-extension.json` in sync.
+
+**skills.sh** has no publish step. Listing and ranking come from `npx skills add` install telemetry, so pushing to `main` is the release.
+
+**Gemini CLI gallery** lists the repo automatically. It must be public, have `gemini-extension.json` at the root, and carry the `gemini-cli-extension` topic, which you can set from the repo's About settings or with `gh repo edit geekflare/geekflare-clawhub-skill --add-topic gemini-cli-extension`. The gallery is crawled daily.
+
+**ClawHub.** Log in with an account in the Geekflare org (`npx clawhub login`), then publish. Preview with `--dry-run` first:
+
+```bash
+npx clawhub skill publish ./skills/geekflare --owner geekflare --slug geekflare --name "Geekflare" --version <version> --categories research,integrations --source-repo geekflare/geekflare-clawhub-skill --source-commit $(git rev-parse HEAD) --source-path skills/geekflare --changelog "<what changed>"
+```
+
+New ClawHub releases stay hidden until its security scans pass. Published skills are MIT-0 licensed.

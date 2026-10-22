@@ -1,0 +1,20 @@
+{
+  "name": "geekflare",
+  "version": "1.1.0",
+  "description": "Web search (incl. Google SERP), page scraping, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (DNS, TLS, uptime, Lighthouse) via Geekflare.",
+  "mcpServers": {
+    "geekflare": {
+      "url": "https://mcp.geekflare.com/${GEEKFLARE_API_KEY}/mcp",
+      "type": "http",
+      "timeout": 120000
+    }
+  },
+  "settings": [
+    {
+      "name": "Geekflare API key",
+      "description": "Your Geekflare API key from https://dash.geekflare.com",
+      "envVar": "GEEKFLARE_API_KEY",
+      "sensitive": true
+    }
+  ]
+}

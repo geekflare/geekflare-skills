@@ -1,7 +1,7 @@
 ---
 name: geekflare
 description: Use Geekflare for live web search (including full Google SERP results), scraping public webpages into Markdown or structured JSON, page metadata, brand identity (logos, colors, fonts), screenshots, URL-to-PDF, and website diagnostics such as uptime, DNS, DNSSEC, TLS/SSL, redirects, broken links, load time, and Lighthouse audits. Trigger when a user needs current public-web data, clean page content, a visual capture, or a health check of a website or domain, even if they do not mention Geekflare.
-version: 1.0.0
+version: 1.1.0
 homepage: https://geekflare.com/api/
 metadata:
   openclaw:
@@ -12,7 +12,7 @@ metadata:
     envVars:
       - name: GEEKFLARE_API_KEY
         required: true
-        description: Geekflare API key from https://dash.geekflare.com, used by the Geekflare MCP server (and REST API fallback).
+        description: Geekflare API key from https://dash.geekflare.com, used by the Geekflare MCP server and REST API.
     emoji: "🌐"
     homepage: https://docs.geekflare.com/mcp/overview
 ---
@@ -23,41 +23,71 @@ Geekflare turns public websites into agent-ready data: search results, clean pag
 
 Geekflare is a paid service with a free tier. Each call spends account credits (some options cost more, e.g. `webScrape` with `aiPrompt`). Do not spend credits on requests that a cheaper tool or no tool can answer.
 
+## How to reach Geekflare
+
+Check in this order:
+
+1. **Geekflare MCP tools are connected** (tools named `search`, `webScrape`, `screenshot`, `dnsRecord`, …, often prefixed with the server name, e.g. `geekflare` or `mcp__geekflare__`). Use them. This is the preferred path.
+2. **No MCP tools, but you can run shell commands and `GEEKFLARE_API_KEY` is set.** Call the [REST API](#rest-api) with `curl`.
+3. **Neither.** Tell the user Geekflare is not connected yet and walk them through [Setup](#setup). Do not ask them to paste the key into chat.
+
+Never print, log, echo, or repeat the API key, or the remote MCP URL (the key is part of its path). On a 401, ask the user to check that `GEEKFLARE_API_KEY` is set and valid.
+
 ## Setup
 
-The skill needs `GEEKFLARE_API_KEY`. Get a key at <https://dash.geekflare.com> (sign up: <https://auth.geekflare.com/register?service=geekflare_api>).
+Get an API key at <https://dash.geekflare.com> (free sign-up: <https://auth.geekflare.com/register?service=geekflare_api>) and store it in the environment as `GEEKFLARE_API_KEY`, for example in the shell profile or the agent's `.env`. Keep it out of files that are committed to git.
 
-1. Put the key in the environment OpenClaw reads, for example `~/.openclaw/.env`:
+Geekflare's MCP server comes in two forms. Pick whichever the client supports:
 
-   ```bash
-   GEEKFLARE_API_KEY=your-key-here
-   ```
+| Form | Configuration |
+| --- | --- |
+| Remote (streamable HTTP) | URL `https://mcp.geekflare.com/<API_KEY>/mcp` |
+| Local (stdio) | `npx -y @geekflare/mcp` with env `API_KEY=<API_KEY>` (Node.js 18+) |
 
-2. Register the hosted Geekflare MCP server in `openclaw.json` under `mcp.servers`. Reference the key with `${GEEKFLARE_API_KEY}`; never paste the literal key into config:
+Reference the environment variable instead of writing the key into config wherever the client supports it:
 
-   ```json5
-   {
-     mcp: {
-       servers: {
-         geekflare: {
-           url: "https://mcp.geekflare.com/${GEEKFLARE_API_KEY}/mcp",
-           transport: "streamable-http",
-           requestTimeoutMs: 120000,
-         },
-       },
-     },
-   }
-   ```
+**Gemini CLI.** Install this repository as an extension. It registers the server and prompts for the key, storing it in the system keychain:
 
-   Or save it from the CLI (single quotes keep the shell from expanding the variable, so the reference is stored, not the key):
+```bash
+gemini extensions install https://github.com/geekflare/geekflare-clawhub-skill
+```
 
-   ```bash
-   openclaw mcp set geekflare '{"url":"https://mcp.geekflare.com/${GEEKFLARE_API_KEY}/mcp","transport":"streamable-http","requestTimeoutMs":120000}'
-   ```
+**Claude Code.** `.mcp.json` expands `${VAR}`:
 
-3. Verify with `openclaw mcp probe geekflare`. The tools listed below should appear.
+```json
+{
+  "mcpServers": {
+    "geekflare": {
+      "type": "http",
+      "url": "https://mcp.geekflare.com/${GEEKFLARE_API_KEY}/mcp"
+    }
+  }
+}
+```
 
-Never print, log, echo, or repeat the API key or the resolved MCP URL (the key is part of its path). If the tools are missing or calls return 401, ask the user to check that `GEEKFLARE_API_KEY` is set and valid; do not ask them to paste the key into chat.
+**Cursor.** `~/.cursor/mcp.json` or `.cursor/mcp.json` expands `${env:VAR}`:
+
+```json
+{
+  "mcpServers": {
+    "geekflare": {
+      "url": "https://mcp.geekflare.com/${env:GEEKFLARE_API_KEY}/mcp"
+    }
+  }
+}
+```
+
+**OpenClaw.** `openclaw.json` expands `${VAR}`. Single quotes keep the shell from expanding it, so the config stores the reference, not the key:
+
+```bash
+openclaw mcp set geekflare '{"url":"https://mcp.geekflare.com/${GEEKFLARE_API_KEY}/mcp","transport":"streamable-http","requestTimeoutMs":120000}'
+```
+
+Then verify with `openclaw mcp probe geekflare`.
+
+**Other clients** (VS Code, Windsurf/Devin, Cline, Roo Code, Zed, Codex, n8n, …): see the per-client guides at <https://docs.geekflare.com/mcp/overview>. If a client cannot read environment variables in its MCP config, prefer the local `npx` form with `API_KEY` passed from the environment.
+
+Some checks (`lighthouse`, full-page screenshots of heavy pages) can take a minute or more. Raise the client's MCP request timeout if calls time out.
 
 ## Choose the narrowest tool
 
@@ -138,9 +168,9 @@ Run the relevant subset, in parallel when possible: `siteStatus`, `tlsScan`, `dn
 
 Do not repeat an unchanged failing request; each attempt spends credits.
 
-## REST API fallback
+## REST API
 
-If the MCP server cannot be configured, the same features are available over HTTPS at `https://api.geekflare.com` with the key in the `x-api-key` header (not a query parameter), for example:
+When MCP tools are not available, the same features are served at `https://api.geekflare.com`. Every endpoint is a `POST` with a JSON body. The key goes in the `x-api-key` header, never in the URL or query string:
 
 ```bash
 curl -sS -X POST https://api.geekflare.com/dnsrecord \
@@ -149,7 +179,19 @@ curl -sS -X POST https://api.geekflare.com/dnsrecord \
   -d '{"url":"https://example.com","types":["A","MX"]}'
 ```
 
-Endpoint paths and body fields: <https://docs.geekflare.com/llms.txt>. Check the docs before guessing a path or field.
+| MCP tool | REST path | MCP tool | REST path |
+| --- | --- | --- | --- |
+| `search` | `/search` | `siteStatus` | `/up` |
+| `webScrape` | `/webscraping` | `dnsRecord` | `/dnsrecord` |
+| `metaScrape` | `/metascraping` | `dnsSec` | `/dnssec` |
+| `brand` | `/brand` | `tlsScan` | `/tlsscan` |
+| `screenshot` | `/screenshot` | `redirectCheck` | `/redirectcheck` |
+| `url2Pdf` | `/url2pdf` | `brokenLink` | `/brokenlink` |
+| `lighthouse` | `/lighthouse` | `mixedContent` | `/mixedcontent` |
+| `loadTime` | `/loadtime` | `openPorts` | `/openport` |
+| `ping` | `/ping` | `mtr` | `/mtr` |
+
+Body fields mostly match the MCP parameters in [references/tools.md](references/tools.md). Before guessing a field, check the endpoint's page, listed in <https://docs.geekflare.com/llms.txt>. Pass the key via the environment variable (`$GEEKFLARE_API_KEY`), never as a literal in the command.
 
 ## Links
 
