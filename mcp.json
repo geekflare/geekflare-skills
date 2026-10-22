@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "geekflare": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@geekflare/mcp"],
+      "env": {
+        "API_KEY": "${GEEKFLARE_API_KEY}"
+      }
+    }
+  }
+}
