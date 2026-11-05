@@ -22,6 +22,8 @@ Then connect the Geekflare MCP server in your agent. [`SKILL.md`](skills/geekfla
 gemini extensions install https://github.com/geekflare/geekflare-skills
 ```
 
+**Cursor:** install **Geekflare** from the [Cursor Marketplace](https://cursor.com/marketplace) under Customize. It adds the skill and the hosted Geekflare MCP server, and you sign in with your Geekflare account in the browser, so there's no API key to paste.
+
 **Kiro** (as a power): in Kiro, open the **Powers** panel, choose **Add Custom Power** → **Import power from GitHub**, and enter `https://github.com/geekflare/geekflare-skills`. The power runs the Geekflare MCP server locally with `npx @geekflare/mcp` (Node.js 18+), so set `GEEKFLARE_API_KEY` in your environment before starting Kiro.
 
 **OpenClaw** (via [ClawHub](https://clawhub.ai/geekflare/skills/geekflare)):
@@ -35,6 +37,7 @@ openclaw skills install @geekflare/geekflare
 - [`skills/geekflare/SKILL.md`](skills/geekflare/SKILL.md): when to use each tool, setup per client, working rules, errors, and the REST API.
 - [`skills/geekflare/references/tools.md`](skills/geekflare/references/tools.md): per-tool parameter reference.
 - [`gemini-extension.json`](gemini-extension.json): Gemini CLI extension manifest. It registers the remote MCP server and the `GEEKFLARE_API_KEY` setting, and Gemini loads the skill from `skills/`.
+- [`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json) and [`.cursor-plugin/mcp.json`](.cursor-plugin/mcp.json): Cursor plugin manifest. Cursor loads the skill from `skills/` and connects to the OAuth MCP endpoint `https://mcp.geekflare.com/mcp`.
 - [`plugin.json`](plugin.json) and [`mcp.json`](mcp.json): [Agent Plugins](https://agent-plugins.org) manifest and MCP config, used by Kiro powers. The MCP server is `npx @geekflare/mcp`, with the key passed from `GEEKFLARE_API_KEY`.
 
 ## Data, privacy, and support
