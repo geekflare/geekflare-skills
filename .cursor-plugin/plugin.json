@@ -1,7 +1,7 @@
 {
   "name": "geekflare",
   "displayName": "Geekflare",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Live web search (including Google SERP), page scraping to Markdown or JSON, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (DNS, TLS, uptime, redirects, Lighthouse). Runs on the hosted Geekflare MCP server with browser sign-in.",
   "author": {
     "name": "Geekflare"

@@ -1,10 +1,10 @@
 # Geekflare agent skill
 
-Official [Geekflare](https://geekflare.com) skill for AI agents. It covers web search (including Google SERP), page scraping, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, DNSSEC, TLS, redirects, broken links, load time, Lighthouse).
+Official [Geekflare](https://geekflare.com) skill for AI agents. It covers web search (including Google SERP), page scraping, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, TLS, redirects, broken links, load time, Lighthouse).
 
 [![skills.sh](https://skills.sh/b/geekflare/geekflare-skills)](https://skills.sh/geekflare/geekflare-skills)
 
-You need a Geekflare API key: <https://dash.geekflare.com>. Store it as the `GEEKFLARE_API_KEY` environment variable.
+You need a [Geekflare account](https://dash.geekflare.com). Claude and Cursor connect through browser sign-in, so there is no API key to manage. Other clients use an API key from the dashboard, stored as the `GEEKFLARE_API_KEY` environment variable.
 
 ## Install
 
@@ -22,6 +22,17 @@ Then connect the Geekflare MCP server in your agent. [`SKILL.md`](skills/geekfla
 gemini extensions install https://github.com/geekflare/geekflare-skills
 ```
 
+**Claude Code** (as a plugin; installs the skill and the hosted MCP server):
+
+```bash
+claude plugin marketplace add geekflare/geekflare-skills
+claude plugin install geekflare@geekflare
+```
+
+Run `/mcp` and sign in with your Geekflare account.
+
+**Claude (claude.ai, Claude Desktop):** go to **Customize > Connectors**, choose **Add custom connector**, enter `https://mcp.geekflare.com/mcp`, and sign in with your Geekflare account.
+
 **Cursor:** install **Geekflare** from the [Cursor Marketplace](https://cursor.com/marketplace) under Customize. It adds the skill and the hosted Geekflare MCP server, and you sign in with your Geekflare account in the browser, so there's no API key to paste.
 
 **Kiro** (as a power): in Kiro, open the **Powers** panel, choose **Add Custom Power** → **Import power from GitHub**, and enter `https://github.com/geekflare/geekflare-skills`. The power runs the Geekflare MCP server locally with `npx @geekflare/mcp` (Node.js 18+), so set `GEEKFLARE_API_KEY` in your environment before starting Kiro.
@@ -37,18 +48,19 @@ openclaw skills install @geekflare/geekflare
 - [`skills/geekflare/SKILL.md`](skills/geekflare/SKILL.md): when to use each tool, setup per client, working rules, errors, and the REST API.
 - [`skills/geekflare/references/tools.md`](skills/geekflare/references/tools.md): per-tool parameter reference.
 - [`gemini-extension.json`](gemini-extension.json): Gemini CLI extension manifest. It registers the remote MCP server and the `GEEKFLARE_API_KEY` setting, and Gemini loads the skill from `skills/`.
+- [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) and [`.mcp.json`](.mcp.json): Claude plugin manifest. Claude loads the skill from `skills/` and connects to the OAuth MCP endpoint `https://mcp.geekflare.com/mcp`.
 - [`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json) and [`.cursor-plugin/mcp.json`](.cursor-plugin/mcp.json): Cursor plugin manifest. Cursor loads the skill from `skills/` and connects to the OAuth MCP endpoint `https://mcp.geekflare.com/mcp`.
 - [`plugin.json`](plugin.json) and [`mcp.json`](mcp.json): [Agent Plugins](https://agent-plugins.org) manifest and MCP config, used by Kiro powers. The MCP server is `npx @geekflare/mcp`, with the key passed from `GEEKFLARE_API_KEY`.
 
 ## Data, privacy, and support
 
-The skill and MCP server send the queries, URLs, and options you ask about to Geekflare's API (`mcp.geekflare.com` / `api.geekflare.com`) under your Geekflare account, and use your account's credits. See the [Geekflare privacy policy](https://geekflare.com/privacy/).
+The plugins contain no executable code or hooks. They add a skill (instructions for the agent) and connect to the hosted MCP server at `mcp.geekflare.com`. The skill and MCP server send the queries, URLs, and options you ask about to Geekflare's API (`mcp.geekflare.com` / `api.geekflare.com`) under your Geekflare account, and use your account's credits. Browser sign-in goes through `dash.geekflare.com`. If no MCP server is connected and `GEEKFLARE_API_KEY` is set, the skill can call `api.geekflare.com` with `curl` using that key, and it sends the key nowhere else. Every tool is read-only. See the [Geekflare privacy policy](https://geekflare.com/privacy/).
 
 Support: [support@geekflare.com](mailto:support@geekflare.com) or [open an issue](https://github.com/geekflare/geekflare-skills/issues).
 
 ## Maintainers: releasing
 
-Keep `version` in `skills/geekflare/SKILL.md` and `gemini-extension.json` in sync.
+Keep `version` in `skills/geekflare/SKILL.md`, `gemini-extension.json`, `plugin.json`, `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, and `.claude-plugin/marketplace.json` in sync.
 
 **skills.sh** has no publish step. Listing and ranking come from `npx skills add` install telemetry, so pushing to `main` is the release.
 

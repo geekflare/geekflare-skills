@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "geekflare": {
+      "type": "http",
+      "url": "https://mcp.geekflare.com/mcp"
+    }
+  }
+}

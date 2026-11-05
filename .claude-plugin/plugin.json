@@ -1,0 +1,20 @@
+{
+  "name": "geekflare",
+  "displayName": "Geekflare",
+  "version": "1.2.0",
+  "description": "Live web search, page scraping to Markdown or JSON, page metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, TLS, redirects, broken links, load time, Lighthouse). Connects to the hosted Geekflare MCP server with browser sign-in.",
+  "author": {
+    "name": "Geekflare",
+    "email": "support@geekflare.com",
+    "url": "https://geekflare.com"
+  },
+  "homepage": "https://geekflare.com",
+  "repository": "https://github.com/geekflare/geekflare-skills",
+  "license": "MIT",
+  "keywords": ["web-search", "scraping", "screenshot", "pdf", "dns", "tls", "lighthouse", "web-data"],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://docs.geekflare.com/mcp/overview",
+  "supportUrl": "https://geekflare.com/contact/?product=api",
+  "privacyPolicyUrl": "https://geekflare.com/privacy/",
+  "termsOfServiceUrl": "https://geekflare.com/terms/"
+}
