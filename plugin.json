@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "geekflare",
-  "version": "1.1.0",
-  "description": "Live web search (including the full Google results page by country or city), page scraping to Markdown or JSON, page metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, DNSSEC, TLS, redirects, broken links, load time, Lighthouse) with the Geekflare API.",
+  "version": "1.2.0",
+  "description": "Live web search (including the full Google results page by country or city), page scraping to Markdown or JSON, page metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (uptime, DNS, TLS, redirects, broken links, load time, Lighthouse) with the Geekflare API.",
   "author": {
     "name": "Geekflare",
     "email": "support@geekflare.com",

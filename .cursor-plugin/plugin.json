@@ -1,0 +1,26 @@
+{
+  "name": "geekflare",
+  "displayName": "Geekflare",
+  "version": "1.2.0",
+  "description": "Live web search (including Google SERP), page scraping to Markdown or JSON, metadata, brand data, screenshots, URL-to-PDF, and website diagnostics (DNS, TLS, uptime, redirects, Lighthouse). Runs on the hosted Geekflare MCP server with browser sign-in.",
+  "author": {
+    "name": "Geekflare"
+  },
+  "homepage": "https://geekflare.com",
+  "repository": "https://github.com/geekflare/geekflare-skills",
+  "license": "MIT",
+  "keywords": [
+    "geekflare",
+    "web-search",
+    "serp",
+    "scraping",
+    "screenshot",
+    "pdf",
+    "dns",
+    "tls",
+    "lighthouse",
+    "mcp"
+  ],
+  "logo": "assets/logo.png",
+  "mcpServers": ".cursor-plugin/mcp.json"
+}

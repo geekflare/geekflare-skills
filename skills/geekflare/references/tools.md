@@ -77,18 +77,11 @@ Name, logos, colors, fonts, social profiles, links. `mode`: `standard` or `enric
 | --- | --- | --- |
 | `siteStatus` | Up/down and HTTP status | `followRedirect` |
 | `dnsRecord` | A, AAAA, CNAME, MX, NS, SOA, TXT, CAA, SRV | `types` (array) |
-| `dnsSec` | DNSSEC enabled and validating | |
 | `tlsScan` | Supported protocol versions (SSLv2 → TLS 1.3), certificate details and expiry | |
 | `redirectCheck` | Full redirect chain | |
 | `brokenLink` | Broken links on the page | `followRedirect` |
-| `mixedContent` | HTTP resources on HTTPS pages | `followRedirect` |
 | `loadTime` | Page load time | `targetCountries` (≤3 ISO codes) for a per-location breakdown |
-| `ttfb` | Time to first byte | |
-| `httpHeader` | Response headers (security headers, caching) | |
-| `httpProtocol` | HTTP/1.1, HTTP/2, HTTP/3 support | |
 | `lighthouse` | Performance, SEO, accessibility, best practices | `device`, `followRedirect`, `parameters` (extra Lighthouse CLI flags) |
-| `ping` | Latency | URL or IP |
-| `mtr` | Network path and per-hop loss | |
 | `openPorts` | Open ports, optional service detection | `topPorts` (50/100/500/1000/5000), `portRanges` (`80,443,1000-1010`), `detectServices`. Authorized hosts only |
 
 Several diagnostics accept `proxyCountry` (ISO code) to run the check from another country, for example to compare availability by region.
